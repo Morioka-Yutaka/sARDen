@@ -104,6 +104,53 @@ run;
 
   
 ---
+## `%sard_tabulate()` macro <a name="sardtabulate-macro-5"></a> ######
+### Purpose:  
+  Generate ARD-style tabulations (long format) for categorical variables,  
+  producing n, BigN (denominator), and p (proportion), compatible with cards tabulate ARD.  
+  
+### Parameters:  
+~~~text
+  data=                   Source dataset.  
+  variable=               Categorical variables to tabulate (space-separated). Required.  
+  by=                     Optional grouping variables (space-separated).  
+  statistic=              Stats to output (space-separated). Default: n P BigN.  
+                           n    = count within variable level  
+                           BigN = denominator for the by-group  
+                           p    = n/BigN  
+  denominator_dataset=    Optional dataset to define denominators explicitly.  
+                           If blank, denominators are derived from data=.  
+  classdata=              Optional CLASSDATA= for PROC SUMMARY to force level display.  
+  context=                Context label stored in output (default: tabulate).  
+  out=                    Output ARD dataset name.  
+~~~
 
+### Outputs:  
+  out= dataset with columns:  
+    group1-groupN, group1_level-groupN_level (if by provided),  
+    variable, variable_level, context, stat_name, stat_label, stat, fmt_fun  
+  fmt_fun:  
+    n/BigN -> "0", p -> "xx.x" (intended display template).  
+   
+### Notes:  
+  - If by= is empty, denominators are scalar and applied to all levels.  
+  - variable_level stored as formatted value (vvalue).  
+  - Assumes variable/bystats exist and are non-missing for numerator records.  
+  
+### Example:  
+~~~sas
+  %sard_tabulate(  
+    data=ADSL,  
+    by=TRT01P,  
+    variable=SEX,  
+    statistic=n P BigN,  
+    out=sard_tabulate  
+  );
+~~~
+
+<img width="1248" height="508" alt="image" src="https://github.com/user-attachments/assets/f1e5fd8c-4782-41df-b1a9-cfd266e3f803" />
+
+  
+---
 
 
