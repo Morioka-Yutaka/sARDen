@@ -153,4 +153,53 @@ run;
   
 ---
 
+## `%sard_stack_hierarchical()` macro <a name="sardstackhierarchical-macro-2"></a> ######
+### Purpose:  
+  Generate hierarchical ARD for rate-style stacking (subject-level unique counting).  
+  Designed for event hierarchies like AE SOC/PT, producing overall + per-level summaries by group.  
+  
+### Parameters:
+~~~text
+  data=                   Source event dataset (e.g., ADAE).  
+  variable=               Hierarchical variables (space-separated), ordered top->bottom (e.g., AEBODSYS AEDECOD).  
+  variable_hieral_code=   Optional ordering code variables aligned with variable= list (space-separated).  
+  by=                     Grouping variables (space-separated), e.g., TRTA.  
+  id=                     Subject identifier for rate counting (unique per id within each hierarchy level). Required.  
+  statistic=              Stats to output (space-separated). Default: n P BigN.  
+  denominator_dataset=    Dataset to define denominators (usually ADSL). Required for p/BigN usage.  
+  classdata=              Optional CLASSDATA= for PROC SUMMARY.  
+  over_variables=         Y/N.  
+                           Y -> include overall ("Any event") row via dummy variable.  
+                           N -> no overall row.  
+  out=                    Output ARD dataset name.  
+~~~
+
+### Outputs:  
+  out= dataset with columns:  
+    group#, group#_level, variable, variable_level, context="hierarchical",  
+    stat_name, stat_label, stat, fmt_fun, plus optional variable_hieral_code columns.  
+  Includes overall row where variable="hierarchical_overall", variable_level="Y" if over_variables=Y.  
+
+### Notes:  
+  - Subject-level de-duplication is enforced per (id, by, variable level).  
+  - variable_hieral_code assumes same length as variable= and key uniqueness in data=.  
+  - by= must be non-empty for this version.  
+  
+### Example:  
+~~~sas
+  %sard_stack_hierarchical(  
+    data=ADAE,  
+    variable=AEBODSYS AEDECOD,  
+    variable_hieral_code=AEBDSYCD F_AEPTCD,  
+    by=TRTA,  
+    id=USUBJID,  
+    denominator_dataset=ADSL(rename=(TRT01A=TRTA)),  
+    out=sard_stack_hierarchical  
+  );
+~~~
+<img width="1506" height="882" alt="image" src="https://github.com/user-attachments/assets/29edd77d-4653-4b47-a64e-2b513c4d30cb" />
+
+  
+---
+
 
