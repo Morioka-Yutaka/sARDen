@@ -71,7 +71,36 @@ create_advs = N
 ~~~
 <img width="1366" height="510" alt="image" src="https://github.com/user-attachments/assets/c7a4b6ca-0d36-4f98-930c-fdf0c6f2d09d" />  
 
-
+~~~sas
+proc sort data=ADSL out=_ADSL;
+   by TRT01P;
+run;
+proc surveymeans data=_ADSL geomean  gmstderr ;
+   by TRT01P;
+  var WEIGHTBL HEIGHTBL;
+  ods output GeometricMeans=geomean_1;
+run;
+proc sort data=geomean_1;
+  by  TRT01P VarName;
+run;
+proc transpose data=geomean_1 out=geomean_2(rename=(_NAME_=__NAME_)) prefix=value;
+  by TRT01P VarName;
+run;
+data geomean_3;
+set geomean_2;
+_NAME_=catx("_",varname,__NAME_);
+fmt_fun ="2";
+run;
+%sard_summary(
+  statdata = geomean_3,
+  statdata_value = value1,
+  by =TRT01P,
+  variable = WEIGHTBL HEIGHTBL,
+  statistic = GeoMean GMStdErr,
+  out = sard_summary_geomean
+)
+~~~
+<img width="1286" height="376" alt="image" src="https://github.com/user-attachments/assets/c6eefb3d-00a3-4248-900b-04a2e43a8e16" />
 
   
 ---
