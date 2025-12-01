@@ -28,5 +28,47 @@ create_advs = N
 [ADAE]  
 <img width="758" height="235" alt="image" src="https://github.com/user-attachments/assets/1a0beab0-c842-4124-ac21-2fa284a642a8" />  
 
+## `%sard_summary()` macro <a name="sardsummary-macro-4"></a> ######
+
+Macro: sard_summary  
+Purpose:  
+  Generate ARD-style summary statistics (long format) for continuous variables,  
+  aligned to cards/ARS-like naming: group#, variable, context, stat_name, stat_label, stat, fmt_fun.  
+  Can either compute statistics from raw data (data=) or post-process external stat data (statdata=).  
+  
+Inputs:  
+  data=                 Source dataset for raw summaries (mutually exclusive with statdata=).  
+  statdata=             Pre-computed statistics dataset (mutually exclusive with data=).  
+  statdata_value=       Numeric value column in statdata to map into stat (default: COL1).  
+  by=                   Grouping variables (space-separated). Must be non-empty for this version.  
+  variable=             Analysis variables to summarize (space-separated). Required when data= is used.  
+  statistic=            Statistics to keep (space-separated).  
+                         Expected tokens (case-insensitive): N MEDIAN MEAN SD MIN MAX P25 P75 etc.  
+  classdata=            Optional CLASSDATA= dataset for PROC SUMMARY to force level display.  
+  context=              Context label stored in output (default: summary).  
+  out=                  Output ARD dataset name.  
+  
+Outputs:  
+  out= dataset with columns:  
+    group1-groupN, group1_level-groupN_level, variable, context, stat_name, stat_label, stat, fmt_fun  
+  Ordering variables_sort/statistic_sort used internally to preserve requested order.  
+   
+Notes:  
+  - When data= is used, fmt_fun is auto-derived from decimal precision (capped at 3 dp).  
+  - When statdata= is used, fmt_fun is taken as-is; statdata must contain _NAME_ in "var_stat" form.  
+  - stat_name "stddev" is normalized to "sd".  
+  
+Example:  
+  %sard_summary(  
+    data=ADSL,  
+    by=TRT01P,  
+    variable=AGE WEIGHTBL,  
+    statistic=N MEDIAN MIN MAX MEAN SD,  
+    out=sard_summary_mean  
+  );
+
+  
+---
+
 
 
