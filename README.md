@@ -289,3 +289,54 @@ run;
   
 ---
 
+## `%xrdm_set()` macro <a name="xrdmset-macro-6"></a> ######
+### Purpose:  
+  Attach ARDM/ARM-TS-like metadata to an ARD dataset using SAS extended attributes (XATTR).  
+  Supports partial updates; only non-empty parameters are written.  
+  
+### Parameters:
+~~~sas
+  lib=              Library where ARD dataset resides (default: WORK).  
+  ard=              ARD dataset name to modify. Required.  
+  result_id=        Result identifier (e.g., R001).  
+  analysis_id=      Analysis identifier (e.g., A001).  
+  method_id=        Method identifier (e.g., M001).  
+  result_context=   Free-text description of result context.  
+  table_id=         Table/TFL identifier (e.g., T14.2.1).  
+  display_label=    Free-text display label for output.  
+  print=            Y/N.  
+                    Y -> print ExtendedAttributesDS section via PROC CONTENTS after update.  
+                    N -> no print.  
+~~~
+
+### Outputs:  
+  Updates dataset-level extended attributes on &lib..&ard.  
+  Optionally prints attribute listing to log/output.  
+  
+### Dependencies / Side Effects:  
+  Uses PROC DATASETS MODIFY with XATTR SET DS.  
+  Does not create intermediate datasets.  
+  
+### Notes:  
+  - Free-text fields should be passed with %nrbquote(...) if they contain special characters.  
+  - Existing keys are overwritten when re-specified.  
+  
+### Example:  
+~~~sas
+  %xrdm_set(  
+    lib=WORK,  
+    ard=ard_tab_14_2_1,  
+    result_id=R001,  
+    analysis_id=A001,  
+    method_id=M001,  
+    result_context=%nrbquote(Drug vs Placebo on CHG),  
+    table_id=%nrbquote(T14.2.1),  
+    display_label=%nrbquote(Mean Difference (Drug–Placebo))  
+  );
+~~~
+
+<img width="732" height="406" alt="image" src="https://github.com/user-attachments/assets/35dbf20c-7751-4d56-832e-86dc18b43987" />
+
+  
+---
+
