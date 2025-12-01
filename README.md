@@ -29,14 +29,13 @@ create_advs = N
 <img width="758" height="235" alt="image" src="https://github.com/user-attachments/assets/1a0beab0-c842-4124-ac21-2fa284a642a8" />  
 
 ## `%sard_summary()` macro <a name="sardsummary-macro-4"></a> ######
-
-Macro: sard_summary  
-Purpose:  
+### Purpose:  
   Generate ARD-style summary statistics (long format) for continuous variables,  
   aligned to cards/ARS-like naming: group#, variable, context, stat_name, stat_label, stat, fmt_fun.  
   Can either compute statistics from raw data (data=) or post-process external stat data (statdata=).  
   
-Inputs:  
+### Parameters:  
+~~~text
   data=                 Source dataset for raw summaries (mutually exclusive with statdata=).  
   statdata=             Pre-computed statistics dataset (mutually exclusive with data=).  
   statdata_value=       Numeric value column in statdata to map into stat (default: COL1).  
@@ -47,18 +46,21 @@ Inputs:
   classdata=            Optional CLASSDATA= dataset for PROC SUMMARY to force level display.  
   context=              Context label stored in output (default: summary).  
   out=                  Output ARD dataset name.  
-  
-Outputs:  
+~~~
+### Outputs:  
+~~~text
   out= dataset with columns:  
     group1-groupN, group1_level-groupN_level, variable, context, stat_name, stat_label, stat, fmt_fun  
   Ordering variables_sort/statistic_sort used internally to preserve requested order.  
-   
-Notes:  
+~~~
+
+### Notes:  
   - When data= is used, fmt_fun is auto-derived from decimal precision (capped at 3 dp).  
   - When statdata= is used, fmt_fun is taken as-is; statdata must contain _NAME_ in "var_stat" form.  
   - stat_name "stddev" is normalized to "sd".  
   
-Example:  
+### Example:  
+~~~sas
   %sard_summary(  
     data=ADSL,  
     by=TRT01P,  
@@ -66,6 +68,10 @@ Example:
     statistic=N MEDIAN MIN MAX MEAN SD,  
     out=sard_summary_mean  
   );
+~~~
+<img width="683" height="255" alt="image" src="https://github.com/user-attachments/assets/c7a4b6ca-0d36-4f98-930c-fdf0c6f2d09d" />  
+
+
 
   
 ---
