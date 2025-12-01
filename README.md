@@ -248,3 +248,44 @@ run;
 
 ---
 
+## `%bind_ard()` macro <a name="bindard-macro-1"></a> ######
+### Purpose:  
+  Bind multiple ARD datasets (long format) into a single ARD,  
+  optionally removing duplicates and normalizing column order to ARD-friendly sequence.  
+  
+### parameters:  
+~~~text
+  indata=          Space-separated list of ARD datasets to stack.  
+  outdata=         Output dataset name.  
+  distinct=        Y/N.  
+                   Y -> remove duplicate rows across inputs (excluding dsno/record_no).  
+                   N -> keep all rows.  
+  drop_sortno=     Y/N.  
+                   Y -> drop internal dsno and record_no from output.  
+                   N -> keep them.  
+~~~
+
+### Outputs:  
+  outdata= dataset containing stacked ARD rows.  
+  Column order is set to: group# / group#_level / variable / variable_level / context /  
+  stat_name / stat_label / stat / fmt_fun (any other columns follow).  
+   
+### Notes:  
+  - dsno increments when CUROBS resets between input datasets.  
+  - distinct=Y assumes compatible column structure across ARDs to avoid unintended row drops.  
+  - Current version uses "informat &vsort;" as a placeholder; column order relies on DICTIONARY sequence.  
+  
+### Example:  
+~~~sas
+  %bind_ard(  
+    indata=Sard_summary_mean Sard_tabulate Sard_stack_hierarchical_count,  
+    outdata=ard_tab_14_2_1,  
+    distinct=Y,  
+    drop_sortno=Y  
+  );
+~~~
+<img width="1352" height="846" alt="image" src="https://github.com/user-attachments/assets/1de779d4-081c-41e8-acac-3484abadbe04" />
+
+  
+---
+
