@@ -69,7 +69,7 @@ create_advs = N
     out=sard_summary_mean  
   );
 ~~~
-<img width="683" height="255" alt="image" src="https://github.com/user-attachments/assets/c7a4b6ca-0d36-4f98-930c-fdf0c6f2d09d" />  
+<img width="1366" height="510" alt="image" src="https://github.com/user-attachments/assets/c7a4b6ca-0d36-4f98-930c-fdf0c6f2d09d" />  
 
 
 
