@@ -202,4 +202,49 @@ run;
   
 ---
 
+## `%sard_stack_hierarchical_count()` macro <a name="sardstackhierarchicalcount-macro-3"></a> ######
+### Purpose:  
+  Generate hierarchical ARD for count-style stacking (record/event counting).  
+  Similar to sard_stack_hierarchical, but does not de-duplicate by subject id.  
+  
+### Parameters:  
+~~~text
+  data=                   Source event dataset (e.g., ADAE).  
+  variable=               Hierarchical variables (space-separated), ordered top->bottom.  
+  variable_hieral_code=   Optional ordering code variables aligned with variable= list.  
+  by=                     Grouping variables (space-separated).  
+  statistic=              Stats to output (space-separated). Default: n.  
+  denominator_dataset=    Dataset to define denominators (optional unless p/BigN requested).  
+  classdata=              Optional CLASSDATA= for PROC SUMMARY.  
+  over_variables=         Y/N to include overall dummy row.  
+  out=                    Output ARD dataset name.  
+~~~
+
+### Outputs:  
+  out= dataset with columns:  
+    group#, group#_level, variable, variable_level, context="hierarchical",  
+    stat_name, stat_label, stat, fmt_fun, plus optional variable_hieral_code columns.  
+   
+### Notes:  
+  - Counts reflect number of records/events, not number of subjects.  
+  - Denominator/pct layers are computed even if statistic excludes them (harmless overhead).  
+  - variable_hieral_code assumes same length as variable=.  
+  
+### Example:  
+~~~sas
+  %sard_stack_hierarchical_count(  
+    data=ADAE,  
+    variable=AEBODSYS AEDECOD,  
+    variable_hieral_code=AEBDSYCD F_AEPTCD,  
+    by=TRTA,  
+    statistic=n,  
+    denominator_dataset=ADSL(rename=(TRT01A=TRTA)),  
+    out=sard_stack_hierarchical_count  
+  );
+~~~
+
+<img width="1448" height="826" alt="image" src="https://github.com/user-attachments/assets/9f2d6871-37d3-4938-b788-cdedd39861f7" />
+
+
+---
 
